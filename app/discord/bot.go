@@ -7,8 +7,7 @@ import (
 )
 
 type Bot struct {
-	session   *discordgo.Session
-	channelID string
+	session *discordgo.Session
 }
 
 func MakeBot() (*Bot, error) {
@@ -23,8 +22,7 @@ func MakeBot() (*Bot, error) {
 	}
 
 	return &Bot{
-		session:   session,
-		channelID: "",
+		session: session,
 	}, nil
 }
 
