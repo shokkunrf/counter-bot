@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/discord"
 	"log"
 	"os"
 	"os/signal"
@@ -8,6 +9,17 @@ import (
 )
 
 func main() {
+	bot, err := discord.MakeBot()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	err = bot.Start()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer bot.Stop()
+
 	log.Println("--- Start ---")
 
 	// 終了を待機
