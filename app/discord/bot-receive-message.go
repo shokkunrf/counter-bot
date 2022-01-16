@@ -16,6 +16,32 @@ func (b *Bot) receiveMessage(session *discordgo.Session, event *discordgo.Messag
 	if !isMentioned(event.Mentions, me.ID) {
 		return
 	}
+
+	msg, err := b.session.ChannelMessageSendEmbed(event.ChannelID, &discordgo.MessageEmbed{
+		Title:       "Counter",
+		Description: "Increment :arrow_up:, Decrement :arrow_down:, Reset :zero:",
+	})
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	b.message = msg
+
+	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, "⬆️")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, "⬇️")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, "0️⃣")
+	if err != nil {
+		log.Println(err)
+		return
+	}
 }
 
 func isMentioned(mentions []*discordgo.User, myID string) bool {

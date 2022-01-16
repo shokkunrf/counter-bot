@@ -8,6 +8,7 @@ import (
 
 type Bot struct {
 	session *discordgo.Session
+	message *discordgo.Message
 }
 
 func MakeBot() (*Bot, error) {
