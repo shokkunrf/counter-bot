@@ -73,3 +73,8 @@ func (c *Client) ResetCount(userID string) error {
 	})
 	return nil
 }
+
+func (c *Client) ClearCounters() error {
+	c.counters = []Counter{}
+	return nil
+}

@@ -3,6 +3,8 @@ package discord
 import (
 	"app/store"
 	"log"
+	"regexp"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -19,6 +21,14 @@ func (b *Bot) receiveMessage(session *discordgo.Session, event *discordgo.Messag
 	}
 
 	storeClient, _ := store.GetClient()
+
+	// メッセージを取得
+	str := regexp.MustCompile(`<@\!\d*>`).ReplaceAllString(event.Content, "")
+	cmd := strings.TrimSpace(str)
+	if cmd == CLEAR_MESSAGE {
+		storeClient.ClearCounters()
+	}
+
 	counters, _ := storeClient.GetCounters()
 
 	messageField, err := b.generateMessageEmbedFields(session, counters)
