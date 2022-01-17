@@ -1,6 +1,7 @@
 package discord
 
 import (
+	"app/store"
 	"log"
 
 	"github.com/bwmarrin/discordgo"
@@ -17,9 +18,19 @@ func (b *Bot) receiveMessage(session *discordgo.Session, event *discordgo.Messag
 		return
 	}
 
+	storeClient, _ := store.GetClient()
+	counters, _ := storeClient.GetCounters()
+
+	messageField, err := b.generateMessageEmbedFields(session, counters)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
 	msg, err := b.session.ChannelMessageSendEmbed(event.ChannelID, &discordgo.MessageEmbed{
 		Title:       "Counter",
 		Description: "Increment :arrow_up:, Decrement :arrow_down:, Reset :zero:",
+		Fields:      messageField,
 	})
 	if err != nil {
 		log.Println(err)

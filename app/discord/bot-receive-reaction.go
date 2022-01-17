@@ -3,7 +3,6 @@ package discord
 import (
 	"app/store"
 	"log"
-	"strconv"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -39,20 +38,11 @@ func (b *Bot) receiveReaction(session *discordgo.Session, event *discordgo.Messa
 		storeClient.ResetCount(event.UserID)
 	}
 
-	messageField := []*discordgo.MessageEmbedField{}
 	counters, _ := storeClient.GetCounters()
-	for _, counter := range counters {
-		user, err := session.User(counter.UserID)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		messageField = append(messageField, &discordgo.MessageEmbedField{
-			Name:   user.Username,
-			Value:  strconv.Itoa(counter.Count) + " pt",
-			Inline: true,
-		})
+	messageField, err := b.generateMessageEmbedFields(session, counters)
+	if err != nil {
+		log.Println(err)
+		return
 	}
 
 	_, err = b.session.ChannelMessageEditEmbed(event.ChannelID, event.MessageID, &discordgo.MessageEmbed{
