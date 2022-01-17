@@ -27,17 +27,17 @@ func (b *Bot) receiveMessage(session *discordgo.Session, event *discordgo.Messag
 	}
 	b.message = msg
 
-	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, "⬆️")
+	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, INCREMENT_EMOJI)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, "⬇️")
+	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, DECREMENT_EMOJI)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, "0️⃣")
+	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, RESET_EMOJI)
 	if err != nil {
 		log.Println(err)
 		return
