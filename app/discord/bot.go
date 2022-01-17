@@ -36,11 +36,6 @@ func (b *Bot) Start() error {
 	b.session.AddHandler(b.receiveMessage)
 	b.session.AddHandler(b.receiveReaction)
 
-	err = b.session.UpdateGameStatus(1, "Watching No Channel")
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
