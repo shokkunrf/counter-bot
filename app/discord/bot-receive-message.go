@@ -31,17 +31,13 @@ func (b *Bot) receiveMessage(session *discordgo.Session, event *discordgo.Messag
 
 	counters, _ := storeClient.GetCounters()
 
-	messageField, err := b.generateMessageEmbedFields(session, counters)
+	embeddedMessage, err := b.generateEmbeddedMessage(counters)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	msg, err := b.session.ChannelMessageSendEmbed(event.ChannelID, &discordgo.MessageEmbed{
-		Title:       "Counter",
-		Description: "Increment :arrow_up:, Decrement :arrow_down:, Reset :zero:",
-		Fields:      messageField,
-	})
+	msg, err := b.session.ChannelMessageSendEmbed(event.ChannelID, &embeddedMessage)
 	if err != nil {
 		log.Println(err)
 		return

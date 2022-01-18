@@ -7,13 +7,13 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func (b *Bot) generateMessageEmbedFields(session *discordgo.Session, counters []store.Counter) ([]*discordgo.MessageEmbedField, error) {
+func (b *Bot) generateEmbeddedMessage(counters []store.Counter) (discordgo.MessageEmbed, error) {
 	messageField := []*discordgo.MessageEmbedField{}
 
 	for _, counter := range counters {
-		user, err := session.User(counter.UserID)
+		user, err := b.session.User(counter.UserID)
 		if err != nil {
-			return nil, err
+			return discordgo.MessageEmbed{}, err
 		}
 
 		messageField = append(messageField, &discordgo.MessageEmbedField{
@@ -23,5 +23,9 @@ func (b *Bot) generateMessageEmbedFields(session *discordgo.Session, counters []
 		})
 	}
 
-	return messageField, nil
+	return discordgo.MessageEmbed{
+		Title:       "Counter",
+		Description: "Increment :arrow_up:, Decrement :arrow_down:, Reset :zero:",
+		Fields:      messageField,
+	}, nil
 }
