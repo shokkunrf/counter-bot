@@ -11,7 +11,7 @@ type Bot struct {
 	message *discordgo.Message
 }
 
-func MakeBot() (*Bot, error) {
+func NewBot() (*Bot, error) {
 	conf, err := config.GetDiscordConfig()
 	if err != nil {
 		return nil, err

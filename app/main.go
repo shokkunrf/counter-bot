@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	bot, err := discord.MakeBot()
+	bot, err := discord.NewBot()
 	if err != nil {
 		log.Fatalln(err)
 	}
