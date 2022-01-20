@@ -24,7 +24,7 @@ func (b *Bot) generateEmbeddedMessage(counters []store.Counter) (discordgo.Messa
 	}
 
 	return discordgo.MessageEmbed{
-		Title:       "Counter",
+		Title:       b.messageTitle,
 		Description: "Increment :arrow_up:, Decrement :arrow_down:, Reset :zero:",
 		Fields:      messageField,
 	}, nil

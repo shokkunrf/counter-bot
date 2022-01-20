@@ -7,8 +7,9 @@ import (
 )
 
 type Bot struct {
-	session *discordgo.Session
-	message *discordgo.Message
+	session      *discordgo.Session
+	message      *discordgo.Message
+	messageTitle string
 }
 
 func NewBot() (*Bot, error) {
@@ -23,7 +24,8 @@ func NewBot() (*Bot, error) {
 	}
 
 	return &Bot{
-		session: session,
+		session:      session,
+		messageTitle: conf.MessageTitle,
 	}, nil
 }
 
