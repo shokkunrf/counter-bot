@@ -25,40 +25,42 @@ func (b *Bot) receiveMessage(session *discordgo.Session, event *discordgo.Messag
 	// メッセージを取得
 	str := regexp.MustCompile(`<@\!\d*>`).ReplaceAllString(event.Content, "")
 	cmd := strings.TrimSpace(str)
-	if cmd == CLEAR_MESSAGE {
+	switch cmd {
+	case START_MESSAGE:
+		counters, _ := storeClient.GetCounters()
+
+		embeddedMessage, err := b.generateEmbeddedMessage(counters)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		msg, err := b.session.ChannelMessageSendEmbed(event.ChannelID, &embeddedMessage)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		b.message = msg
+
+		err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, INCREMENT_EMOJI)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, DECREMENT_EMOJI)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, RESET_EMOJI)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	case CLEAR_MESSAGE:
 		storeClient.ClearCounters()
 	}
 
-	counters, _ := storeClient.GetCounters()
-
-	embeddedMessage, err := b.generateEmbeddedMessage(counters)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	msg, err := b.session.ChannelMessageSendEmbed(event.ChannelID, &embeddedMessage)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	b.message = msg
-
-	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, INCREMENT_EMOJI)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, DECREMENT_EMOJI)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	err = b.session.MessageReactionAdd(event.ChannelID, msg.ID, RESET_EMOJI)
-	if err != nil {
-		log.Println(err)
-		return
-	}
 }
 
 func isMentioned(mentions []*discordgo.User, myID string) bool {
