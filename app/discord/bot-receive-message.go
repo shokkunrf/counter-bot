@@ -24,8 +24,12 @@ func (b *Bot) receiveMessage(session *discordgo.Session, event *discordgo.Messag
 
 	// メッセージを取得
 	str := regexp.MustCompile(`<@\!\d*>`).ReplaceAllString(event.Content, "")
-	cmd := strings.TrimSpace(str)
-	switch cmd {
+	cmd := strings.Split(strings.TrimSpace(str), " ")
+	if cmd[0] != COMMAND {
+		return
+	}
+
+	switch cmd[1] {
 	case START_MESSAGE:
 		counters, _ := storeClient.GetCounters()
 
